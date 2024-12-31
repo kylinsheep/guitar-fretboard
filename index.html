@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>吉他指板音阶</title>
+  <style>
+    canvas {
+      border: 1px solid #ccc;
+      display: block;
+      margin: 20px auto;
+    }
+
+    .controls {
+      text-align: center;
+      margin: 20px;
+    }
+
+    .controls button {
+      margin: 5px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .controls input {
+      margin-left: 10px;
+      padding: 5px;
+      font-size: 16px;
+      width: 60px;
+      text-align: center;
+    }
+
+    #chord-name {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="chord-name">吉他指板音阶</div>
+  <canvas id="fretboard" width="900" height="400"></canvas>
+  <div class="controls">
+    <button id="startButton">1 2 3 START！</button>
+    <button id="startButton2">2 3 4 START！</button>
+    <button id="stopButton" disabled>STOP</button>
+    <button id="refreshButton">C调音阶</button>
+    BPM:
+    <input id="speedInput" type="number" min="1" value="60" />
+  </div>
+  <audio id="metronomeSound" src="https://ahao430.github.io/metronome/audio/beat1.mp3"></audio>
+
+  <script>
+    const canvas = document.getElementById('fretboard');
+    const ctx = canvas.getContext('2d');
+    const chordNameElement = document.getElementById('chord-name');
+    const startButton = document.getElementById('startButton');
+    const startButton2 = document.getElementById('startButton2');
+    const stopButton = document.getElementById('stopButton');
+    const refreshButton = document.getElementById('refreshButton');
+    const metronomeSound = document.getElementById('metronomeSound');
+
+    const numStrings = 6; // 六根弦
+    const numFrets = 16; // 16 品
+    const offsetX = 50; // 整个指板右移 50 像素，留出空弦音位置
+    const stringSpacing = canvas.height / (numStrings + 2); // 弦间距
+    const fretSpacing = (canvas.width - offsetX) / numFrets; // 品间距
+
+
+    // 定义每根弦的空弦音阶（包含高音标记）
+    const openNotes = ['·3', '7', '5', '2', '6·', '3·']; // 从高到低的空弦音
+
+    // C自然大调的全全半全全全半规则
+    const cNaturalMajorPattern = [2, 2, 1, 2, 2, 2, 1];
+
+    const highlightAreas = [
+      { color: 'red', startFret: 0, endFret: 6, strings: [1] },
+      { color: 'red', startFret: 0, endFret: 11, strings: [2] },
+      { color: 'red', startFret: 4, endFret: 15, strings: [3] },
+      { color: 'red', startFret: 9, endFret: 15, strings: [4] },
+      { color: 'blue', startFret: 7, endFret: 15, strings: [1] },
+      { color: 'blue', startFret: 12, endFret: 15, strings: [2] },
+      { color: 'orange', startFret: 0, endFret: 1, strings: [5] },
+      { color: 'red', startFret: 14, endFret: 15, strings: [5] },
+      { color: 'orange', startFret: 0, endFret: 6, strings: [6] },
+    ];
+
+
+    // 和弦音阶位置表
+    const originalChords = [
+      { name: 'C', positions: [{ string: 3, fret: 5, note: '5' }, { string: 2, fret: 5, note: '3' }, { string: 1, fret: 3, note: '1' }] },
+      { name: 'Dm', positions: [{ string: 3, fret: 7, note: '6' }, { string: 2, fret: 6, note: '4' }, { string: 1, fret: 5, note: '2' }] },
+      { name: 'Em', positions: [{ string: 3, fret: 9, note: '7' }, { string: 2, fret: 8, note: '5' }, { string: 1, fret: 7, note: '3' }] },
+      { name: 'F', positions: [{ string: 3, fret: 10, note: '1' }, { string: 2, fret: 10, note: '6' }, { string: 1, fret: 8, note: '4' }] },
+      { name: 'G', positions: [{ string: 3, fret: 12, note: '2' }, { string: 2, fret: 12, note: '7' }, { string: 1, fret: 10, note: '5' }] },
+      { name: 'Am', positions: [{ string: 3, fret: 14, note: '3' }, { string: 2, fret: 13, note: '1' }, { string: 1, fret: 12, note: '6' }] },
+      { name: 'Bdim', positions: [{ string: 3, fret: 4, note: '4' }, { string: 2, fret: 3, note: '2' }, { string: 1, fret: 1, note: '7' }] },
+      { name: 'C', positions: [{ string: 3, fret: 5, note: '5' }, { string: 2, fret: 5, note: '3' }, { string: 1, fret: 3, note: '1' }] },
+    ];
+
+    const firstInversionChords = [
+      { name: 'C', positions: [{ string: 3, fret: 9, note: '1' }, { string: 2, fret: 8, note: '5' }, { string: 1, fret: 8, note: '3' }] },
+      { name: 'Dm', positions: [{ string: 3, fret: 10, note: '2' }, { string: 2, fret: 10, note: '6' }, { string: 1, fret: 10, note: '4' }] },
+      { name: 'Em', positions: [{ string: 3, fret: 12, note: '3' }, { string: 2, fret: 12, note: '7' }, { string: 1, fret: 12, note: '5' }] },
+      { name: 'F', positions: [{ string: 3, fret: 2, note: '4' }, { string: 2, fret: 1, note: '1' }, { string: 1, fret: 1, note: '6' }] },
+      { name: 'G', positions: [{ string: 3, fret: 4, note: '5' }, { string: 2, fret: 3, note: '2' }, { string: 1, fret: 3, note: '7' }] },
+      { name: 'Am', positions: [{ string: 3, fret: 5, note: '6' }, { string: 2, fret: 5, note: '3' }, { string: 1, fret: 5, note: '1' }] },
+      { name: 'Bdim', positions: [{ string: 3, fret: 7, note: '7' }, { string: 2, fret: 6, note: '4' }, { string: 1, fret: 7, note: '2' }] },
+      { name: 'C', positions: [{ string: 3, fret: 9, note: '1' }, { string: 2, fret: 8, note: '5' }, { string: 1, fret: 8, note: '3' }] },
+    ];
+
+    const secondInversionChords = [
+      { name: 'C', positions: [{ string: 3, fret: 0, note: '3' }, { string: 2, fret: 1, note: '1' }, { string: 1, fret: 0, note: '5' }] },
+      { name: 'Dm', positions: [{ string: 3, fret: 2, note: '4' }, { string: 2, fret: 3, note: '2' }, { string: 1, fret: 1, note: '6' }] },
+      { name: 'Em', positions: [{ string: 3, fret: 4, note: '5' }, { string: 2, fret: 5, note: '3' }, { string: 1, fret: 3, note: '7' }] },
+      { name: 'F', positions: [{ string: 3, fret: 5, note: '6' }, { string: 2, fret: 6, note: '4' }, { string: 1, fret: 5, note: '1' }] },
+      { name: 'G', positions: [{ string: 3, fret: 7, note: '7' }, { string: 2, fret: 8, note: '5' }, { string: 1, fret: 7, note: '2' }] },
+      { name: 'Am', positions: [{ string: 3, fret: 9, note: '1' }, { string: 2, fret: 10, note: '6' }, { string: 1, fret: 8, note: '3' }] },
+      { name: 'Bdim', positions: [{ string: 3, fret: 10, note: '2' }, { string: 2, fret: 12, note: '7' }, { string: 1, fret: 10, note: '4' }] },
+      { name: 'C', positions: [{ string: 3, fret: 0, note: '3' }, { string: 2, fret: 1, note: '1' }, { string: 1, fret: 0, note: '5' }] },
+    ];
+
+
+    // 和弦音阶位置表
+    const originalChords2 = [
+      { name: 'C', positions: [{ string: 4, fret: 10, note: '5' }, { string: 3, fret: 9, note: '3' }, { string: 2, fret: 8, note: '1' }] },
+      { name: 'Dm', positions: [{ string: 4, fret: 12, note: '6' }, { string: 3, fret: 10, note: '4' }, { string: 2, fret: 10, note: '2' }] },
+      { name: 'Em', positions: [{ string: 4, fret: 14, note: '7' }, { string: 3, fret: 12, note: '5' }, { string: 2, fret: 12, note: '3' }] },
+      { name: 'F', positions: [{ string: 4, fret: 3, note: '1' }, { string: 3, fret: 2, note: '6' }, { string: 2, fret: 1, note: '4' }] },
+      { name: 'G', positions: [{ string: 4, fret: 5, note: '2' }, { string: 3, fret: 4, note: '7' }, { string: 2, fret: 3, note: '5' }] },
+      { name: 'Am', positions: [{ string: 4, fret: 7, note: '3' }, { string: 3, fret: 5, note: '1' }, { string: 2, fret: 5, note: '6' }] },
+      { name: 'Bdim', positions: [{ string: 4, fret: 9, note: '4' }, { string: 3, fret: 7, note: '2' }, { string: 2, fret: 6, note: '7' }] },
+      { name: 'C', positions: [{ string: 4, fret: 10, note: '5' }, { string: 3, fret: 9, note: '3' }, { string: 2, fret: 8, note: '1' }] },
+    ];
+
+    const firstInversionChords2 = [
+      { name: 'C', positions: [{ string: 4, fret: 2, note: '1' }, { string: 3, fret: 0, note: '5' }, { string: 2, fret: 1, note: '3' }] },
+      { name: 'Dm', positions: [{ string: 4, fret: 3, note: '2' }, { string: 3, fret: 2, note: '6' }, { string: 2, fret: 3, note: '4' }] },
+      { name: 'Em', positions: [{ string: 4, fret: 5, note: '3' }, { string: 3, fret: 4, note: '7' }, { string: 2, fret: 5, note: '5' }] },
+      { name: 'F', positions: [{ string: 4, fret: 7, note: '4' }, { string: 3, fret: 5, note: '1' }, { string: 2, fret: 6, note: '6' }] },
+      { name: 'G', positions: [{ string: 4, fret: 9, note: '5' }, { string: 3, fret: 7, note: '2' }, { string: 2, fret: 8, note: '7' }] },
+      { name: 'Am', positions: [{ string: 4, fret: 10, note: '6' }, { string: 3, fret: 9, note: '3' }, { string: 2, fret: 10, note: '1' }] },
+      { name: 'Bdim', positions: [{ string: 4, fret: 12, note: '7' }, { string: 3, fret: 10, note: '4' }, { string: 2, fret: 12, note: '2' }] },
+      { name: 'C', positions: [{ string: 4, fret: 14, note: '1' }, { string: 3, fret: 12, note: '5' }, { string: 2, fret: 13, note: '3' }] },
+    ];
+
+    const secondInversionChords2 = [
+      { name: 'C', positions: [{ string: 4, fret: 5, note: '3' }, { string: 3, fret: 5, note: '1' }, { string: 2, fret: 5, note: '5' }] },
+      { name: 'Dm', positions: [{ string: 4, fret: 7, note: '4' }, { string: 3, fret: 7, note: '2' }, { string: 2, fret: 6, note: '6' }] },
+      { name: 'Em', positions: [{ string: 4, fret: 9, note: '5' }, { string: 3, fret: 9, note: '3' }, { string: 2, fret: 8, note: '7' }] },
+      { name: 'F', positions: [{ string: 4, fret: 10, note: '6' }, { string: 3, fret: 10, note: '4' }, { string: 2, fret: 10, note: '1' }] },
+      { name: 'G', positions: [{ string: 4, fret: 12, note: '7' }, { string: 3, fret: 12, note: '5' }, { string: 2, fret: 12, note: '2' }] },
+      { name: 'Am', positions: [{ string: 4, fret: 2, note: '1' }, { string: 3, fret: 2, note: '6' }, { string: 2, fret: 1, note: '3' }] },
+      { name: 'Bdim', positions: [{ string: 4, fret: 3, note: '2' }, { string: 3, fret: 4, note: '7' }, { string: 2, fret: 3, note: '4' }] },
+      { name: 'C', positions: [{ string: 4, fret: 5, note: '3' }, { string: 3, fret: 5, note: '1' }, { string: 2, fret: 5, note: '5' }] },
+    ];
+
+
+
+
+
+
+    let currentChordIndex = 0;
+    let currentSet = 'original'; // 当前展示的和弦类型
+    let intervalId = null;
+
+    function getHighlightColor(fret, string) {
+      for (let area of highlightAreas) {
+        if (
+          fret >= area.startFret &&
+          fret <= area.endFret &&
+          area.strings.includes(string)
+        ) {
+          return area.color;
+        }
+      }
+      return '#000'; // 默认黑色
+    }
+
+    // 绘制指板
+    function drawFretboard() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height); // 清空画布
+
+      // 绘制弦
+      ctx.strokeStyle = '#000';
+      for (let i = 1; i <= numStrings; i++) {
+        const y = i * stringSpacing;
+        ctx.beginPath();
+        ctx.moveTo(offsetX, y); // 从 offsetX 开始绘制
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+      }
+
+      // 绘制品
+      for (let i = 0; i <= numFrets; i++) {
+        const x = i * fretSpacing + offsetX; // 从 offsetX 开始计算品位置
+        ctx.beginPath();
+        ctx.moveTo(x, stringSpacing); // 所有竖线从第1弦开始
+        ctx.lineTo(x, numStrings * stringSpacing);
+        ctx.stroke();
+      }
+    }
+
+    // 绘制空弦音
+    function drawOpenNotes() {
+      ctx.font = '16px Arial';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      for (let string = 1; string <= numStrings; string++) {
+        const note = openNotes[string - 1];
+        const x = offsetX - fretSpacing / 2; // 空弦音阶显示在左侧
+        const y = string * stringSpacing;
+        ctx.fillStyle = '#000';
+        ctx.fillText(note, x, y); // 正确绘制空弦音
+      }
+    }
+
+    // 绘制品格上的音阶
+    function drawNotes() {
+      ctx.font = '14px Arial';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      for (let string = 1; string <= numStrings; string++) {
+        const openNote = openNotes[string - 1]; // 空弦音阶
+        let currentNote = parseInt(openNote.replace('·', ''), 10); // 当前音阶值
+        let patternIndex = (currentNote - 1) % cNaturalMajorPattern.length; // 当前音阶在模式中的索引
+
+        for (let fret = -1; fret <= numFrets - 1; fret++) {
+          const x = fret * fretSpacing + offsetX + fretSpacing / 2; // 修正品格位置
+          const y = string * stringSpacing;
+
+
+
+
+          // 绘制音阶
+          const fillColor = getHighlightColor(fret, string);
+
+          // 绘制音阶
+          ctx.fillStyle = fillColor;
+          ctx.fillText(
+            currentNote > 7 ? `·${currentNote % 7}` : `${currentNote}`,
+            x,
+            y
+          );
+
+          // 更新音阶逻辑
+          if (fret < numFrets) {
+            const step = cNaturalMajorPattern[patternIndex]; // 当前音阶到下一音阶的间隔
+            currentNote += 1; // 音阶递增
+            currentNote = currentNote > 7 ? 1 : currentNote; // 超过7后循环回到1
+            patternIndex = (patternIndex + 1) % cNaturalMajorPattern.length; // 循环模式索引
+            if (step === 2) {
+              fret++; // 如果是全音，跳过一个品格
+            }
+          }
+        }
+      }
+    }
+
+    // 绘制品数标记
+    function drawFretNumbers() {
+      ctx.fillStyle = '#000';
+      ctx.font = '16px Arial';
+      for (let fret = 1; fret <= numFrets; fret++) {
+        const x = fret * fretSpacing - fretSpacing / 2 + offsetX; // 品格对齐
+        const y = (numStrings + 1) * stringSpacing; // 底部标记位置
+        ctx.fillText(fret, x, y);
+      }
+    }
+
+    function drawChord(chord) {
+      ctx.font = '14px Arial';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      chord.positions.forEach((position) => {
+        const x = position.fret * fretSpacing + offsetX - fretSpacing / 2;
+        const y = position.string * stringSpacing;
+
+        // 绘制浅蓝色背景圆圈
+        ctx.beginPath();
+        ctx.fillStyle = '#87CEEB'; // 浅蓝色
+        ctx.arc(x, y, 15, 0, Math.PI * 2); // 半径15的圆
+        ctx.fill();
+
+        // 绘制音阶字母
+        ctx.fillStyle = '#000'; // 黑色字体
+        ctx.fillText(position.note, x, y); // 显示音阶字母
+      });
+    }
+
+    function switchChordSet() {
+      const chordSet = currentSet === 'original' ? originalChords : currentSet === 'firstInversion' ? firstInversionChords : secondInversionChords;
+      playBeep(); // 播放声音
+      drawFretboard();
+      drawFretNumbers();
+      drawChord(chordSet[currentChordIndex]);
+      chordNameElement.textContent = `当前和弦: ${chordSet[currentChordIndex].name} (${currentSet === 'original' ? '原位' : currentSet === 'firstInversion' ? '第一转位' : '第二转位'})`;
+      currentChordIndex = (currentChordIndex + 1) % chordSet.length;
+
+      if (currentChordIndex === 0) {
+        currentSet = currentSet === 'original' ? 'firstInversion' : currentSet === 'firstInversion' ? 'secondInversion' : 'original';
+      }
+    }
+
+    // 启动演示动画
+    function startAnimation() {
+      const speed = parseFloat(speedInput.value);
+      if (isNaN(speed) || speed <= 0) {
+        alert('请输入有效的切换速度（每秒次数）。');
+        return;
+      }
+      if (!intervalId) {
+        intervalId = setInterval(switchChordSet, (60 / speed) * 1000);
+        startButton.disabled = true;
+        stopButton.disabled = false;
+      }
+    }
+
+
+
+    function switchChordSet2() {
+      const chordSet = currentSet === 'original' ? originalChords2 : currentSet === 'firstInversion' ? firstInversionChords2 : secondInversionChords2;
+      playBeep();  // 播放声音
+      drawFretboard();
+      drawFretNumbers();
+      drawChord(chordSet[currentChordIndex]);
+      chordNameElement.textContent = `当前和弦: ${chordSet[currentChordIndex].name} (${currentSet === 'original' ? '原位' : currentSet === 'firstInversion' ? '第一转位' : '第二转位'})`;
+      currentChordIndex = (currentChordIndex + 1) % chordSet.length;
+
+      if (currentChordIndex === 0) {
+        currentSet = currentSet === 'original' ? 'firstInversion' : currentSet === 'firstInversion' ? 'secondInversion' : 'original';
+      }
+    }
+
+    // 启动演示动画
+    function startAnimation2() {
+      const speed = parseFloat(speedInput.value);
+      if (isNaN(speed) || speed <= 0) {
+        alert('请输入有效的切换速度（每秒次数）。');
+        return;
+      }
+      if (!intervalId) {
+        intervalId = setInterval(switchChordSet2, (60 / speed) * 1000);
+        startButton2.disabled = true;
+        stopButton.disabled = false;
+      }
+    }
+
+
+
+
+    // 停止演示动画
+    function stopAnimation() {
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+        startButton.disabled = false;
+        startButton2.disabled = false;
+        stopButton.disabled = true;
+        chordNameElement.textContent = '吉他指板音阶';
+        //drawFretboard();
+        drawFretNumbers();
+        // drawNotes();
+      }
+    }
+
+    // 还原
+    function refresh() {
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+        startButton.disabled = false;
+        startButton2.disabled = false;
+        stopButton.disabled = true;
+        chordNameElement.textContent = '吉他指板音阶';
+        drawFretboard();
+        drawFretNumbers();
+        drawNotes();
+      }
+      else {
+        drawFretboard();
+        drawFretNumbers();
+        drawNotes();
+      }
+    }
+
+    function playBeep() {
+      metronomeSound.currentTime = 0; // 每次切换重置声音
+      metronomeSound.play(); // 播放声音
+    }
+
+
+
+    // 初始化
+    drawFretboard();
+    //drawOpenNotes();
+    drawNotes();
+    drawFretNumbers();
+
+    // 绑定按钮事件
+    startButton.addEventListener('click', startAnimation);
+    startButton2.addEventListener('click', startAnimation2);
+    stopButton.addEventListener('click', stopAnimation);
+    refreshButton.addEventListener('click', refresh);
+  </script>
+</body>
+
+</html>
