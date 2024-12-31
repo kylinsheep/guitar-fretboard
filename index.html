@@ -281,7 +281,7 @@
 
     // 绘制品数标记
     function drawFretNumbers() {
-      ctx.fillStyle = '#000';
+      ctx.fillStyle = '#FAB12F';
       ctx.font = '16px Arial';
       for (let fret = 1; fret <= numFrets; fret++) {
         const x = fret * fretSpacing - fretSpacing / 2 + offsetX; // 品格对齐
@@ -301,7 +301,7 @@
 
         // 绘制黄色圆圈
         ctx.beginPath();
-        ctx.fillStyle = '#87CEEB'; 
+        ctx.fillStyle = '#FAB12F'; 
         ctx.arc(x, y, 15, 0, Math.PI * 2); // 半径15的圆
         ctx.fill();
 
