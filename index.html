@@ -6,42 +6,60 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>吉他指板音阶</title>
   <style>
+    body {
+      background-color: #000; /* 黑色背景 */
+      color: #FFD700; /* 黄色字体 */
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
     canvas {
-      border: 1px solid #ccc;
+      border: 1px solid #FFD700; /* 黄色边框 */
       display: block;
       margin: 20px auto;
+      background-color: #111; /* 深黑色背景 */
     }
-
-    .controls {
-      text-align: center;
-      margin: 20px;
+    #controls {
+      margin-top: 20px;
     }
-
-    .controls button {
-      margin: 5px;
+    #chordName {
+      font-size: 24px;
+      margin-top: 10px;
+    }
+    #nirvanaLogo {
+      margin: 20px auto;
+      display: block;
+      width: 150px; /* 调整 Logo 尺寸 */
+      height: auto;
+    }
+    button {
+      background-color: #FFD700;
+      border: none;
+      color: #000;
       padding: 10px 20px;
       font-size: 16px;
       cursor: pointer;
+      margin: 10px;
+      border-radius: 5px;
     }
-
-    .controls input {
-      margin-left: 10px;
+    button:hover {
+      background-color: #FFA500; /* 橙黄色悬停效果 */
+    }
+    input[type="number"] {
+      background-color: #333;
+      border: 1px solid #FFD700;
+      color: #FFD700;
       padding: 5px;
-      font-size: 16px;
+      border-radius: 5px;
       width: 60px;
       text-align: center;
-    }
-
-    #chord-name {
-      text-align: center;
-      font-size: 24px;
-      font-weight: bold;
-      margin-bottom: 10px;
     }
   </style>
 </head>
 
 <body>
+  <img id="nirvanaLogo" src="https://img0.baidu.com/it/u=398381583,3122668549&fm=253&fmt=auto&app=138&f=JPEG?w=300&h=300" alt="Nirvana Logo">
   <div id="chord-name">吉他指板音阶</div>
   <canvas id="fretboard" width="900" height="400"></canvas>
   <div class="controls">
@@ -76,15 +94,15 @@
     const cNaturalMajorPattern = [2, 2, 1, 2, 2, 2, 1];
 
     const highlightAreas = [
-      { color: 'red', startFret: 0, endFret: 6, strings: [1] },
-      { color: 'red', startFret: 0, endFret: 11, strings: [2] },
-      { color: 'red', startFret: 4, endFret: 15, strings: [3] },
-      { color: 'red', startFret: 9, endFret: 15, strings: [4] },
-      { color: 'blue', startFret: 7, endFret: 15, strings: [1] },
-      { color: 'blue', startFret: 12, endFret: 15, strings: [2] },
-      { color: 'orange', startFret: 0, endFret: 1, strings: [5] },
-      { color: 'red', startFret: 14, endFret: 15, strings: [5] },
-      { color: 'orange', startFret: 0, endFret: 6, strings: [6] },
+      { color: '#FA812F', startFret: 0, endFret: 6, strings: [1] }, //高1度
+      { color: '#FA812F', startFret: 0, endFret: 11, strings: [2] },//高1度
+      { color: '#FA812F', startFret: 4, endFret: 15, strings: [3] },//高1度
+      { color: '#FA812F', startFret: 9, endFret: 15, strings: [4] },//高1度
+      { color: '#FA4032', startFret: 7, endFret: 15, strings: [1] }, //高2度
+      { color: '#FA4032', startFret: 12, endFret: 15, strings: [2] },//高2度
+      { color: '#FEF3E2', startFret: 0, endFret: 1, strings: [5] }, //低音
+      { color: '#FA812F', startFret: 14, endFret: 15, strings: [5] },//高1度
+      { color: '#FEF3E2', startFret: 0, endFret: 6, strings: [6] }, //低音
     ];
 
 
@@ -176,7 +194,7 @@
           return area.color;
         }
       }
-      return '#000'; // 默认黑色
+      return '#FAB12F'; // 默认
     }
 
     // 绘制指板
@@ -184,7 +202,7 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height); // 清空画布
 
       // 绘制弦
-      ctx.strokeStyle = '#000';
+      ctx.strokeStyle = '#FFD700';
       for (let i = 1; i <= numStrings; i++) {
         const y = i * stringSpacing;
         ctx.beginPath();
@@ -213,7 +231,7 @@
         const note = openNotes[string - 1];
         const x = offsetX - fretSpacing / 2; // 空弦音阶显示在左侧
         const y = string * stringSpacing;
-        ctx.fillStyle = '#000';
+        ctx.fillStyle = '#FFD700';
         ctx.fillText(note, x, y); // 正确绘制空弦音
       }
     }
@@ -281,9 +299,9 @@
         const x = position.fret * fretSpacing + offsetX - fretSpacing / 2;
         const y = position.string * stringSpacing;
 
-        // 绘制浅蓝色背景圆圈
+        // 绘制黄色圆圈
         ctx.beginPath();
-        ctx.fillStyle = '#87CEEB'; // 浅蓝色
+        ctx.fillStyle = '#87CEEB'; 
         ctx.arc(x, y, 15, 0, Math.PI * 2); // 半径15的圆
         ctx.fill();
 
@@ -366,15 +384,13 @@
       if (intervalId) {
         clearInterval(intervalId);
         intervalId = null;
-        startButton.disabled = false;
-        startButton2.disabled = false;
-        stopButton.disabled = true;
         chordNameElement.textContent = '吉他指板音阶';
         drawFretboard();
-        drawFretNumbers();
+        drawFretNumbers(); 
         drawNotes();
       }
       else {
+        chordNameElement.textContent = '吉他指板音阶';
         drawFretboard();
         drawFretNumbers();
         drawNotes();
@@ -413,7 +429,6 @@
         stopAnimation();
       }
     });
-    stopButton.addEventListener('click', stopAnimation);
     refreshButton.addEventListener('click', refresh);
   </script>
 </body>
