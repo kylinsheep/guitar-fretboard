@@ -108,71 +108,71 @@
 
     // 和弦音阶位置表
     const originalChords = [
-      { name: 'C', positions: [{ string: 3, fret: 5, note: '5' }, { string: 2, fret: 5, note: '3' }, { string: 1, fret: 3, note: '1' }] },
-      { name: 'Dm', positions: [{ string: 3, fret: 7, note: '6' }, { string: 2, fret: 6, note: '4' }, { string: 1, fret: 5, note: '2' }] },
-      { name: 'Em', positions: [{ string: 3, fret: 9, note: '7' }, { string: 2, fret: 8, note: '5' }, { string: 1, fret: 7, note: '3' }] },
-      { name: 'F', positions: [{ string: 3, fret: 10, note: '1' }, { string: 2, fret: 10, note: '6' }, { string: 1, fret: 8, note: '4' }] },
-      { name: 'G', positions: [{ string: 3, fret: 12, note: '2' }, { string: 2, fret: 12, note: '7' }, { string: 1, fret: 10, note: '5' }] },
-      { name: 'Am', positions: [{ string: 3, fret: 14, note: '3' }, { string: 2, fret: 13, note: '1' }, { string: 1, fret: 12, note: '6' }] },
-      { name: 'Bdim', positions: [{ string: 3, fret: 4, note: '4' }, { string: 2, fret: 3, note: '2' }, { string: 1, fret: 1, note: '7' }] },
-      { name: 'C', positions: [{ string: 3, fret: 5, note: '5' }, { string: 2, fret: 5, note: '3' }, { string: 1, fret: 3, note: '1' }] },
+      { name: 'C', positions: [{ string: 3, fret: 5, note: '1' }, { string: 2, fret: 5, note: '3' }, { string: 1, fret: 3, note: '5' }] },
+      { name: 'Dm', positions: [{ string: 3, fret: 7, note: '2' }, { string: 2, fret: 6, note: '4' }, { string: 1, fret: 5, note: '6' }] },
+      { name: 'Em', positions: [{ string: 3, fret: 9, note: '3' }, { string: 2, fret: 8, note: '5' }, { string: 1, fret: 7, note: '7' }] },
+      { name: 'F', positions: [{ string: 3, fret: 10, note: '4' }, { string: 2, fret: 10, note: '6' }, { string: 1, fret: 8, note: '1' }] },
+      { name: 'G', positions: [{ string: 3, fret: 12, note: '5' }, { string: 2, fret: 12, note: '7' }, { string: 1, fret: 10, note: '2' }] },
+      { name: 'Am', positions: [{ string: 3, fret: 14, note: '6' }, { string: 2, fret: 13, note: '1' }, { string: 1, fret: 12, note: '3' }] },
+      { name: 'Bdim', positions: [{ string: 3, fret: 4, note: '7' }, { string: 2, fret: 3, note: '2' }, { string: 1, fret: 1, note: '4' }] },
+      { name: 'C', positions: [{ string: 3, fret: 5, note: '1' }, { string: 2, fret: 5, note: '3' }, { string: 1, fret: 3, note: '5' }] },
     ];
 
     const firstInversionChords = [
-      { name: 'C', positions: [{ string: 3, fret: 9, note: '1' }, { string: 2, fret: 8, note: '5' }, { string: 1, fret: 8, note: '3' }] },
-      { name: 'Dm', positions: [{ string: 3, fret: 10, note: '2' }, { string: 2, fret: 10, note: '6' }, { string: 1, fret: 10, note: '4' }] },
-      { name: 'Em', positions: [{ string: 3, fret: 12, note: '3' }, { string: 2, fret: 12, note: '7' }, { string: 1, fret: 12, note: '5' }] },
-      { name: 'F', positions: [{ string: 3, fret: 2, note: '4' }, { string: 2, fret: 1, note: '1' }, { string: 1, fret: 1, note: '6' }] },
-      { name: 'G', positions: [{ string: 3, fret: 4, note: '5' }, { string: 2, fret: 3, note: '2' }, { string: 1, fret: 3, note: '7' }] },
-      { name: 'Am', positions: [{ string: 3, fret: 5, note: '6' }, { string: 2, fret: 5, note: '3' }, { string: 1, fret: 5, note: '1' }] },
-      { name: 'Bdim', positions: [{ string: 3, fret: 7, note: '7' }, { string: 2, fret: 6, note: '4' }, { string: 1, fret: 7, note: '2' }] },
-      { name: 'C', positions: [{ string: 3, fret: 9, note: '1' }, { string: 2, fret: 8, note: '5' }, { string: 1, fret: 8, note: '3' }] },
+      { name: 'C', positions: [{ string: 3, fret: 9, note: '3' }, { string: 2, fret: 8, note: '5' }, { string: 1, fret: 8, note: '1' }] },
+      { name: 'Dm', positions: [{ string: 3, fret: 10, note: '4' }, { string: 2, fret: 10, note: '6' }, { string: 1, fret: 10, note: '2' }] },
+      { name: 'Em', positions: [{ string: 3, fret: 12, note: '5' }, { string: 2, fret: 12, note: '7' }, { string: 1, fret: 12, note: '3' }] },
+      { name: 'F', positions: [{ string: 3, fret: 2, note: '6' }, { string: 2, fret: 1, note: '1' }, { string: 1, fret: 1, note: '4' }] },
+      { name: 'G', positions: [{ string: 3, fret: 4, note: '7' }, { string: 2, fret: 3, note: '2' }, { string: 1, fret: 3, note: '5' }] },
+      { name: 'Am', positions: [{ string: 3, fret: 5, note: '1' }, { string: 2, fret: 5, note: '3' }, { string: 1, fret: 5, note: '6' }] },
+      { name: 'Bdim', positions: [{ string: 3, fret: 7, note: '2' }, { string: 2, fret: 6, note: '4' }, { string: 1, fret: 7, note: '7' }] },
+      { name: 'C', positions: [{ string: 3, fret: 9, note: '3' }, { string: 2, fret: 8, note: '5' }, { string: 1, fret: 8, note: '1' }] },
     ];
 
     const secondInversionChords = [
-      { name: 'C', positions: [{ string: 3, fret: 0, note: '3' }, { string: 2, fret: 1, note: '1' }, { string: 1, fret: 0, note: '5' }] },
-      { name: 'Dm', positions: [{ string: 3, fret: 2, note: '4' }, { string: 2, fret: 3, note: '2' }, { string: 1, fret: 1, note: '6' }] },
-      { name: 'Em', positions: [{ string: 3, fret: 4, note: '5' }, { string: 2, fret: 5, note: '3' }, { string: 1, fret: 3, note: '7' }] },
-      { name: 'F', positions: [{ string: 3, fret: 5, note: '6' }, { string: 2, fret: 6, note: '4' }, { string: 1, fret: 5, note: '1' }] },
-      { name: 'G', positions: [{ string: 3, fret: 7, note: '7' }, { string: 2, fret: 8, note: '5' }, { string: 1, fret: 7, note: '2' }] },
-      { name: 'Am', positions: [{ string: 3, fret: 9, note: '1' }, { string: 2, fret: 10, note: '6' }, { string: 1, fret: 8, note: '3' }] },
-      { name: 'Bdim', positions: [{ string: 3, fret: 10, note: '2' }, { string: 2, fret: 12, note: '7' }, { string: 1, fret: 10, note: '4' }] },
-      { name: 'C', positions: [{ string: 3, fret: 0, note: '3' }, { string: 2, fret: 1, note: '1' }, { string: 1, fret: 0, note: '5' }] },
+      { name: 'C', positions: [{ string: 3, fret: 0, note: '5' }, { string: 2, fret: 1, note: '1' }, { string: 1, fret: 0, note: '3' }] },
+      { name: 'Dm', positions: [{ string: 3, fret: 2, note: '6' }, { string: 2, fret: 3, note: '2' }, { string: 1, fret: 1, note: '4' }] },
+      { name: 'Em', positions: [{ string: 3, fret: 4, note: '7' }, { string: 2, fret: 5, note: '3' }, { string: 1, fret: 3, note: '5' }] },
+      { name: 'F', positions: [{ string: 3, fret: 5, note: '1' }, { string: 2, fret: 6, note: '4' }, { string: 1, fret: 5, note: '6' }] },
+      { name: 'G', positions: [{ string: 3, fret: 7, note: '2' }, { string: 2, fret: 8, note: '5' }, { string: 1, fret: 7, note: '7' }] },
+      { name: 'Am', positions: [{ string: 3, fret: 9, note: '3' }, { string: 2, fret: 10, note: '6' }, { string: 1, fret: 8, note: '1' }] },
+      { name: 'Bdim', positions: [{ string: 3, fret: 10, note: '4' }, { string: 2, fret: 12, note: '7' }, { string: 1, fret: 10, note: '2' }] },
+      { name: 'C', positions: [{ string: 3, fret: 0, note: '5' }, { string: 2, fret: 1, note: '1' }, { string: 1, fret: 0, note: '3' }] },
     ];
 
 
     // 和弦音阶位置表
     const originalChords2 = [
-      { name: 'C', positions: [{ string: 4, fret: 10, note: '5' }, { string: 3, fret: 9, note: '3' }, { string: 2, fret: 8, note: '1' }] },
-      { name: 'Dm', positions: [{ string: 4, fret: 12, note: '6' }, { string: 3, fret: 10, note: '4' }, { string: 2, fret: 10, note: '2' }] },
-      { name: 'Em', positions: [{ string: 4, fret: 14, note: '7' }, { string: 3, fret: 12, note: '5' }, { string: 2, fret: 12, note: '3' }] },
-      { name: 'F', positions: [{ string: 4, fret: 3, note: '1' }, { string: 3, fret: 2, note: '6' }, { string: 2, fret: 1, note: '4' }] },
-      { name: 'G', positions: [{ string: 4, fret: 5, note: '2' }, { string: 3, fret: 4, note: '7' }, { string: 2, fret: 3, note: '5' }] },
-      { name: 'Am', positions: [{ string: 4, fret: 7, note: '3' }, { string: 3, fret: 5, note: '1' }, { string: 2, fret: 5, note: '6' }] },
-      { name: 'Bdim', positions: [{ string: 4, fret: 9, note: '4' }, { string: 3, fret: 7, note: '2' }, { string: 2, fret: 6, note: '7' }] },
-      { name: 'C', positions: [{ string: 4, fret: 10, note: '5' }, { string: 3, fret: 9, note: '3' }, { string: 2, fret: 8, note: '1' }] },
+      { name: 'C', positions: [{ string: 4, fret: 10, note: '1' }, { string: 3, fret: 9, note: '3' }, { string: 2, fret: 8, note: '5' }] },
+      { name: 'Dm', positions: [{ string: 4, fret: 12, note: '2' }, { string: 3, fret: 10, note: '4' }, { string: 2, fret: 10, note: '6' }] },
+      { name: 'Em', positions: [{ string: 4, fret: 14, note: '3' }, { string: 3, fret: 12, note: '5' }, { string: 2, fret: 12, note: '7' }] },
+      { name: 'F', positions: [{ string: 4, fret: 3, note: '4' }, { string: 3, fret: 2, note: '6' }, { string: 2, fret: 1, note: '1' }] },
+      { name: 'G', positions: [{ string: 4, fret: 5, note: '5' }, { string: 3, fret: 4, note: '7' }, { string: 2, fret: 3, note: '2' }] },
+      { name: 'Am', positions: [{ string: 4, fret: 7, note: '6' }, { string: 3, fret: 5, note: '1' }, { string: 2, fret: 5, note: '3' }] },
+      { name: 'Bdim', positions: [{ string: 4, fret: 9, note: '7' }, { string: 3, fret: 7, note: '2' }, { string: 2, fret: 6, note: '4' }] },
+      { name: 'C', positions: [{ string: 4, fret: 10, note: '1' }, { string: 3, fret: 9, note: '3' }, { string: 2, fret: 8, note: '5' }] },
     ];
 
     const firstInversionChords2 = [
-      { name: 'C', positions: [{ string: 4, fret: 2, note: '1' }, { string: 3, fret: 0, note: '5' }, { string: 2, fret: 1, note: '3' }] },
-      { name: 'Dm', positions: [{ string: 4, fret: 3, note: '2' }, { string: 3, fret: 2, note: '6' }, { string: 2, fret: 3, note: '4' }] },
-      { name: 'Em', positions: [{ string: 4, fret: 5, note: '3' }, { string: 3, fret: 4, note: '7' }, { string: 2, fret: 5, note: '5' }] },
-      { name: 'F', positions: [{ string: 4, fret: 7, note: '4' }, { string: 3, fret: 5, note: '1' }, { string: 2, fret: 6, note: '6' }] },
-      { name: 'G', positions: [{ string: 4, fret: 9, note: '5' }, { string: 3, fret: 7, note: '2' }, { string: 2, fret: 8, note: '7' }] },
-      { name: 'Am', positions: [{ string: 4, fret: 10, note: '6' }, { string: 3, fret: 9, note: '3' }, { string: 2, fret: 10, note: '1' }] },
-      { name: 'Bdim', positions: [{ string: 4, fret: 12, note: '7' }, { string: 3, fret: 10, note: '4' }, { string: 2, fret: 12, note: '2' }] },
-      { name: 'C', positions: [{ string: 4, fret: 14, note: '1' }, { string: 3, fret: 12, note: '5' }, { string: 2, fret: 13, note: '3' }] },
+      { name: 'C', positions: [{ string: 4, fret: 2, note: '3' }, { string: 3, fret: 0, note: '5' }, { string: 2, fret: 1, note: '1' }] },
+      { name: 'Dm', positions: [{ string: 4, fret: 3, note: '4' }, { string: 3, fret: 2, note: '6' }, { string: 2, fret: 3, note: '2' }] },
+      { name: 'Em', positions: [{ string: 4, fret: 5, note: '5' }, { string: 3, fret: 4, note: '7' }, { string: 2, fret: 5, note: '3' }] },
+      { name: 'F', positions: [{ string: 4, fret: 7, note: '6' }, { string: 3, fret: 5, note: '1' }, { string: 2, fret: 6, note: '4' }] },
+      { name: 'G', positions: [{ string: 4, fret: 9, note: '7' }, { string: 3, fret: 7, note: '2' }, { string: 2, fret: 8, note: '5' }] },
+      { name: 'Am', positions: [{ string: 4, fret: 10, note: '1' }, { string: 3, fret: 9, note: '3' }, { string: 2, fret: 10, note: '6' }] },
+      { name: 'Bdim', positions: [{ string: 4, fret: 12, note: '2' }, { string: 3, fret: 10, note: '4' }, { string: 2, fret: 12, note: '7' }] },
+      { name: 'C', positions: [{ string: 4, fret: 14, note: '3' }, { string: 3, fret: 12, note: '5' }, { string: 2, fret: 13, note: '1' }] },
     ];
 
     const secondInversionChords2 = [
-      { name: 'C', positions: [{ string: 4, fret: 5, note: '3' }, { string: 3, fret: 5, note: '1' }, { string: 2, fret: 5, note: '5' }] },
-      { name: 'Dm', positions: [{ string: 4, fret: 7, note: '4' }, { string: 3, fret: 7, note: '2' }, { string: 2, fret: 6, note: '6' }] },
-      { name: 'Em', positions: [{ string: 4, fret: 9, note: '5' }, { string: 3, fret: 9, note: '3' }, { string: 2, fret: 8, note: '7' }] },
-      { name: 'F', positions: [{ string: 4, fret: 10, note: '6' }, { string: 3, fret: 10, note: '4' }, { string: 2, fret: 10, note: '1' }] },
-      { name: 'G', positions: [{ string: 4, fret: 12, note: '7' }, { string: 3, fret: 12, note: '5' }, { string: 2, fret: 12, note: '2' }] },
-      { name: 'Am', positions: [{ string: 4, fret: 2, note: '1' }, { string: 3, fret: 2, note: '6' }, { string: 2, fret: 1, note: '3' }] },
-      { name: 'Bdim', positions: [{ string: 4, fret: 3, note: '2' }, { string: 3, fret: 4, note: '7' }, { string: 2, fret: 3, note: '4' }] },
-      { name: 'C', positions: [{ string: 4, fret: 5, note: '3' }, { string: 3, fret: 5, note: '1' }, { string: 2, fret: 5, note: '5' }] },
+      { name: 'C', positions: [{ string: 4, fret: 5, note: '5' }, { string: 3, fret: 5, note: '1' }, { string: 2, fret: 5, note: '3' }] },
+      { name: 'Dm', positions: [{ string: 4, fret: 7, note: '6' }, { string: 3, fret: 7, note: '2' }, { string: 2, fret: 6, note: '4' }] },
+      { name: 'Em', positions: [{ string: 4, fret: 9, note: '7' }, { string: 3, fret: 9, note: '3' }, { string: 2, fret: 8, note: '5' }] },
+      { name: 'F', positions: [{ string: 4, fret: 10, note: '1' }, { string: 3, fret: 10, note: '4' }, { string: 2, fret: 10, note: '6' }] },
+      { name: 'G', positions: [{ string: 4, fret: 12, note: '2' }, { string: 3, fret: 12, note: '5' }, { string: 2, fret: 12, note: '7' }] },
+      { name: 'Am', positions: [{ string: 4, fret: 2, note: '3' }, { string: 3, fret: 2, note: '6' }, { string: 2, fret: 1, note: '1' }] },
+      { name: 'Bdim', positions: [{ string: 4, fret: 3, note: '4' }, { string: 3, fret: 4, note: '7' }, { string: 2, fret: 3, note: '2' }] },
+      { name: 'C', positions: [{ string: 4, fret: 5, note: '5' }, { string: 3, fret: 5, note: '1' }, { string: 2, fret: 5, note: '3' }] },
     ];
 
 
